@@ -42,6 +42,8 @@ mvn -version
 
 ## Open and run from Apache NetBeans
 
+For browser access from a laptop, see the complete [remote desktop and NetBeans workflow](docs/testing/remote-desktop-netbeans.md). The VPS desktop is exposed only through an SSH tunnel; noVNC and VNC are not public services.
+
 1. Start Apache NetBeans.
 2. Select **File → Open Project**.
 3. Choose the repository root, the directory containing the root `pom.xml`.
@@ -260,7 +262,7 @@ zip -r -q -FS submission/hcs425-distributed-system.zip . \
 - Replication is single-writer asynchronous eventual consistency.
 - Replica unavailability is logged while the leader continues local service.
 - Automatic leader election, quorum commit, consensus, network-partition resolution, and automatic missed-update reconciliation are not implemented or claimed.
-- Full Apache NetBeans GUI opening was not performed on the headless VPS; Maven reactor build, dependency resolution, tests, JavaFX launch, resources, and NetBeans Maven metadata were verified.
+- Apache NetBeans 31 GUI opening was verified on the VPS display `:99` with JDK 21; the Maven reactor build, dependency resolution, tests, JavaFX launch, resources, and NetBeans Maven metadata were also verified.
 
 ## Screenshots
 
