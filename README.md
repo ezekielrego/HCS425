@@ -1,6 +1,6 @@
 # HCS425 Distributed Key-Value System
 
-A Java 21 Maven multi-module implementation of a multi-threaded TCP client/server key-value store with a JavaFX/AtlantaFX monitoring console, concurrency benchmark harness, and a bounded single-writer replication demonstration.
+A Java 21 Maven multi-module implementation of a multi-threaded TCP client/server key-value store with a JavaFX/AtlantaFX monitoring console, concurrency benchmark harness, and a bounded single-writer replication demonstration. The console uses an independent Netdata-inspired observability layout: compact metric cards, dense dark panels, live throughput/latency charts, health indicators, and operational activity tables.
 
 ## Modules
 
@@ -56,8 +56,8 @@ Measured CSV output is written to `results/csv/performance-results.csv`, charts 
 
 The following screenshots were captured from the running JavaFX application under Xvfb:
 
-| Dashboard | Key-value operation | Performance results | Replication |
+| Netdata-inspired dashboard | Key-value operation | Performance results | Replication |
 |---|---|---|---|
-| [![Dashboard](results/screenshots/dashboard-live.png)](results/screenshots/dashboard-live.png) | [![PUT operation](results/screenshots/put-operation.png)](results/screenshots/put-operation.png) | [![Performance results](results/screenshots/performance-results.png)](results/screenshots/performance-results.png) | [![Replication](results/screenshots/replication.png)](results/screenshots/replication.png) |
+| [![Dashboard](results/screenshots/dashboard-netdata-inspired-live.png)](results/screenshots/dashboard-netdata-inspired-live.png) | [![PUT operation](results/screenshots/put-operation-netdata-inspired.png)](results/screenshots/put-operation-netdata-inspired.png) | [![Performance results](results/screenshots/performance-results.png)](results/screenshots/performance-results.png) | [![Replication](results/screenshots/replication.png)](results/screenshots/replication.png) |
 
-Additional captures: [GET](results/screenshots/get-operation.png), [DELETE](results/screenshots/delete-operation.png), [LIST](results/screenshots/list-operation.png), [client manager](results/screenshots/client-manager.png), [server logs](results/screenshots/server-logs.png), and [performance page](results/screenshots/performance-page.png).
+Additional redesigned captures: [PUT](results/screenshots/put-operation-netdata-inspired.png), [GET](results/screenshots/get-operation-netdata-inspired.png), and [key-value page](results/screenshots/key-value-netdata-inspired.png). Earlier functional captures are also available for [DELETE](results/screenshots/delete-operation.png), [LIST](results/screenshots/list-operation.png), [client manager](results/screenshots/client-manager.png), [server logs](results/screenshots/server-logs.png), and [performance page](results/screenshots/performance-page.png).

@@ -6,7 +6,7 @@ This submission implements a working TCP client-server key-value system and an o
 
 ## 2. Requirements and technologies
 
-Java 21, Maven 3.8.7, JavaFX 21.0.7, AtlantaFX 2.0.1, JUnit 5.11.4, standard Java TCP sockets, `ExecutorService`, `ConcurrentHashMap`, Xvfb, and Graphviz are used. The project is a Maven reactor and can be opened from the root `pom.xml` in NetBeans.
+Java 21, Maven 3.8.7, JavaFX 21.0.7, AtlantaFX 2.0.1, JUnit 5.11.4, standard Java TCP sockets, `ExecutorService`, `ConcurrentHashMap`, Xvfb, and Graphviz are used. The JavaFX console uses an independent Netdata-inspired observability layout implemented with AtlantaFX styling and JavaFX charts. The project is a Maven reactor and can be opened from the root `pom.xml` in NetBeans.
 
 ## 3. Architecture
 

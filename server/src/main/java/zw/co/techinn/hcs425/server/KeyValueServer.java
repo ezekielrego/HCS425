@@ -186,9 +186,9 @@ public final class KeyValueServer implements AutoCloseable {
 
     private String statsLine() {
         ServerMetrics.Snapshot s = metrics.snapshot();
-        return String.format("STATS node=%s active=%d workers=%d accepted=%d requests=%d success=%d failed=%d avgLatencyMs=%.3f storeKeys=%d",
+        return String.format("STATS node=%s active=%d workers=%d accepted=%d requests=%d success=%d failed=%d avgLatencyMs=%.3f throughputOpsSec=%.3f storeKeys=%d",
                 nodeName, s.activeConnections(), s.activeWorkers(), s.acceptedConnections(), s.totalRequests(),
-                s.successfulRequests(), s.failedRequests(), s.averageLatencyMs(), store.size());
+                s.successfulRequests(), s.failedRequests(), s.averageLatencyMs(), s.throughputOpsSec(), store.size());
     }
 
     private void log(String level, String message) { logs.add(new ServerLogEntry(Instant.now(), level, message)); }
