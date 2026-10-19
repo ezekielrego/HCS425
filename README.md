@@ -51,3 +51,13 @@ Keys cannot contain whitespace. PUT values may contain spaces but cannot contain
 ## Evidence
 
 Measured CSV output is written to `results/csv/performance-results.csv`, charts to `results/charts/`, screenshots to `results/screenshots/`, and the technical report to `docs/report/technical-report.md`. The final NetBeans-openable package is placed in `submission/`.
+
+## Screenshots
+
+The following screenshots were captured from the running JavaFX application under Xvfb:
+
+| Dashboard | Key-value operation | Performance results | Replication |
+|---|---|---|---|
+| [![Dashboard](results/screenshots/dashboard-live.png)](results/screenshots/dashboard-live.png) | [![PUT operation](results/screenshots/put-operation.png)](results/screenshots/put-operation.png) | [![Performance results](results/screenshots/performance-results.png)](results/screenshots/performance-results.png) | [![Replication](results/screenshots/replication.png)](results/screenshots/replication.png) |
+
+Additional captures: [GET](results/screenshots/get-operation.png), [DELETE](results/screenshots/delete-operation.png), [LIST](results/screenshots/list-operation.png), [client manager](results/screenshots/client-manager.png), [server logs](results/screenshots/server-logs.png), and [performance page](results/screenshots/performance-page.png).
