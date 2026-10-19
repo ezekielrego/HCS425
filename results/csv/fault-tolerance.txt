@@ -1,0 +1,5 @@
+aborted_socket=true
+remaining_clients=9
+replacement_client_success=true
+server_still_running=true
+active_connections_after_cleanup=10

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>zw.co.techinn.hcs425</groupId>
+        <artifactId>hcs425-distributed-system</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    <artifactId>hcs425-desktop</artifactId>
+    <name>HCS425 JavaFX Monitoring Console</name>
+    <dependencies>
+        <dependency><groupId>zw.co.techinn.hcs425</groupId><artifactId>hcs425-client</artifactId><version>${project.version}</version></dependency>
+        <dependency><groupId>zw.co.techinn.hcs425</groupId><artifactId>hcs425-server</artifactId><version>${project.version}</version></dependency>
+        <dependency><groupId>zw.co.techinn.hcs425</groupId><artifactId>hcs425-benchmark</artifactId><version>${project.version}</version></dependency>
+        <dependency><groupId>io.github.mkpaz</groupId><artifactId>atlantafx-base</artifactId><version>${atlantafx.version}</version></dependency>
+        <dependency><groupId>org.openjfx</groupId><artifactId>javafx-controls</artifactId><version>${javafx.version}</version></dependency>
+        <dependency><groupId>org.openjfx</groupId><artifactId>javafx-fxml</artifactId><version>${javafx.version}</version></dependency>
+        <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><scope>test</scope></dependency>
+        <dependency><groupId>org.assertj</groupId><artifactId>assertj-core</artifactId><version>${assertj.version}</version><scope>test</scope></dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <configuration><mainClass>zw.co.techinn.hcs425.desktop.Hcs425DesktopApp</mainClass></configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

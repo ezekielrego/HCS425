@@ -1,0 +1,13 @@
+digraph Replication {
+  rankdir=TB; bgcolor="transparent"; graph [fontname="DejaVu Sans", nodesep=0.7, ranksep=0.8];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans"];
+  client [label="TCP client / JavaFX console", fillcolor="#e8f7f1", color="#2bb673"];
+  leader [label="Server A\nLEADER :5050\nlocal acknowledgement", fillcolor="#fff4dd", color="#e2a93b"];
+  b [label="Server B\nREPLICA :5051", fillcolor="#eef4ff", color="#2d6cdf"];
+  c [label="Server C\nREPLICA :5052", fillcolor="#eef4ff", color="#2d6cdf"];
+  client -> leader [label="PUT / DELETE"];
+  leader -> b [label="ordered REPL seq\nasynchronous update"];
+  leader -> c [label="ordered REPL seq\nasynchronous update"];
+  note [label="Safety boundary: single writer; controlled failover only.\nNo automatic election or quorum durability is claimed.", shape=note, fillcolor="#f3edff", color="#8759c7"];
+  leader -> note [style=dashed, arrowhead=none];
+}

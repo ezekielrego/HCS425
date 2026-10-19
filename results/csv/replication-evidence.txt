@@ -1,0 +1,11 @@
+replication_runtime_test=passed
+leader_port=5050
+replica_b_port=5051
+replica_c_port=5052
+leader_put_response=OK STORED
+replica_b_get_response=OK VALUE yes
+replica_c_get_response=OK VALUE yes
+leader_log=replication seq=1 PUT -> B REPLICATED
+leader_log=replication seq=1 PUT -> C REPLICATED
+consistency=eventual asynchronous propagation
+failover=controlled operator failover only; automatic election not claimed

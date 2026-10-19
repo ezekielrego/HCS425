@@ -1,0 +1,13 @@
+digraph HCS425 {
+  rankdir=LR; bgcolor="transparent"; graph [fontname="DejaVu Sans", nodesep=0.45, ranksep=0.75];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", color="#2d6cdf", fillcolor="#eef4ff"];
+  edge [fontname="DejaVu Sans", color="#4b5563"];
+  clients [label="JavaFX Client 1\nJavaFX Client 2\nSimulated Clients 1..20", fillcolor="#e8f7f1", color="#2bb673"];
+  tcp [label="TCP / UTF-8 line protocol\nPersistent connections", shape=hexagon, fillcolor="#fff4dd", color="#e2a93b"];
+  server [label="Java TCP Server\nServerSocket + graceful shutdown"];
+  executor [label="Bounded ExecutorService\nIndependent client workers"];
+  store [label="ConcurrentHashMap\nThread-safe key/value store", fillcolor="#f3edff", color="#8759c7"];
+  metrics [label="Metrics + structured logs", fillcolor="#f3edff", color="#8759c7"];
+  clients -> tcp -> server -> executor -> store;
+  executor -> metrics [label="latency / success / failures"];
+}
