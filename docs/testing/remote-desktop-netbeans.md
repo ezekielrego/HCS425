@@ -2,6 +2,25 @@
 
 The VPS has a lightweight XFCE desktop available through noVNC. The browser gateway and the underlying VNC server listen on `127.0.0.1` only. This is intentional: do not open ports 5900 or 6080 publicly.
 
+## Public HTTPS address
+
+The configured public address is:
+
+```text
+https://desktop.techinn.co.zw/
+```
+
+It is protected by HTTP Basic Authentication and then by the noVNC session. The DNS provider must have an `A` record named `desktop` pointing to the VPS address before the hostname can reach this server. After DNS propagation, issue a trusted certificate with:
+
+```bash
+sudo certbot certonly --webroot -w /var/www/html \
+  --cert-name desktop.techinn.co.zw -d desktop.techinn.co.zw \
+  --agree-tos --non-interactive -m YOUR_EMAIL
+sudo systemctl reload nginx
+```
+
+Until that certificate step succeeds, browsers may show the temporary certificate warning created by the hosting panel. Do not bypass that warning for a long-term setup; use the trusted certificate after the DNS record is live.
+
 ## Connect from a laptop browser
 
 Create an SSH tunnel from the laptop that has the browser:

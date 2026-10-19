@@ -42,7 +42,9 @@ mvn -version
 
 ## Open and run from Apache NetBeans
 
-For browser access from a laptop, see the complete [remote desktop and NetBeans workflow](docs/testing/remote-desktop-netbeans.md). The VPS desktop is exposed only through an SSH tunnel; noVNC and VNC are not public services.
+For browser access from a laptop, see the complete [remote desktop and NetBeans workflow](docs/testing/remote-desktop-netbeans.md). The underlying VNC/noVNC services remain localhost-only; the optional public address is protected by HTTPS and authentication.
+
+The configured public desktop address is `https://desktop.techinn.co.zw/`; it requires authentication and becomes reachable after its DNS `A` record points to the VPS.
 
 1. Start Apache NetBeans.
 2. Select **File → Open Project**.
