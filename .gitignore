@@ -3,9 +3,6 @@ target/
 *.iml
 *.log
 hs_err_pid*
-results/csv/*.csv
-results/charts/*.png
-results/screenshots/*.png
 submission/*.zip
 logs/*.log
 logs/*.pid
