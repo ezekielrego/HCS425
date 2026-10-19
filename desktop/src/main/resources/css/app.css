@@ -24,7 +24,7 @@
 .range-button:selected { -fx-background-color: #173657; -fx-text-fill: #63b0ff; }
 .live-badge { -fx-background-color: #10382c; -fx-text-fill: #4be09c; -fx-padding: 5 8; -fx-background-radius: 4; -fx-font-size: 10px; -fx-font-weight: bold; }
 .content { -fx-padding: 15 18 24 18; }
-.netdata-content { -fx-padding: 14 18 24 18; }
+.observability-content { -fx-padding: 14 18 24 18; }
 .section-strip { -fx-padding: 1 0 3 0; }
 .section-title { -fx-text-fill: #d8e1ec; -fx-font-size: 12px; -fx-font-weight: bold; }
 .section-meta { -fx-text-fill: #647184; -fx-font-size: 10px; }

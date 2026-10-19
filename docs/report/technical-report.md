@@ -6,7 +6,7 @@ This submission implements a working TCP client-server key-value system and an o
 
 ## 2. Requirements and technologies
 
-Java 21, Maven 3.8.7, JavaFX 21.0.7, AtlantaFX 2.0.1, JUnit 5.11.4, standard Java TCP sockets, `ExecutorService`, `ConcurrentHashMap`, Xvfb, and Graphviz are used. The JavaFX console uses an independent Netdata-inspired observability layout implemented with AtlantaFX styling and JavaFX charts. The project is a Maven reactor and can be opened from the root `pom.xml` in NetBeans.
+Java 21, Maven 3.8.7, JavaFX 21.0.7, AtlantaFX 2.0.1, JUnit 5.11.4, standard Java TCP sockets, `ExecutorService`, `ConcurrentHashMap`, Xvfb, and Graphviz are used. The JavaFX console uses a compact observability layout implemented with AtlantaFX styling and JavaFX charts. The project is a Maven reactor and can be opened from the root `pom.xml` in NetBeans.
 
 ## 3. Architecture
 
@@ -26,17 +26,17 @@ The benchmark establishes real TCP connections, warms each connection, coordinat
 
 ### Measured environment
 
-Ubuntu 24.04.4 LTS, x86_64, 4 logical CPUs, 7.8 GiB RAM, Java 21.0.12.1, Maven 3.8.7. Record the generated CSV and command output alongside this report after the benchmark run.
+Ubuntu 24.04.4 LTS, x86_64, 4 logical CPUs, 7.8 GiB RAM, Java 21.0.12.1, Maven 3.8.7. The generated CSV, charts, and fault-tolerance evidence are stored under `results/`.
 
 ### Primary measured run
 
 | Clients | Operations | Elapsed (s) | Mean (ms) | Median (ms) | p95 (ms) | Throughput | Speedup | Efficiency | Errors |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 1 | 2,000 | 0.523672 | 0.251594 | 0.145130 | 0.727896 | 3,819.18 | 1.000x | 100.00% | 0 |
-| 2 | 2,000 | 0.294243 | 0.267854 | 0.147965 | 0.670249 | 6,797.11 | 1.780x | 88.99% | 0 |
-| 5 | 2,000 | 0.218399 | 0.521927 | 0.365842 | 1.076726 | 9,157.54 | 2.398x | 47.96% | 0 |
-| 10 | 2,000 | 0.217970 | 0.919917 | 0.581965 | 2.629329 | 9,175.56 | 2.402x | 24.02% | 0 |
-| 20 | 2,000 | 0.171434 | 1.455521 | 0.610808 | 6.815658 | 11,666.27 | 3.055x | 15.27% | 0 |
+| 1 | 2,000 | 0.519210 | 0.249766 | 0.148156 | 0.720822 | 3,852.01 | 1.000x | 100.00% | 0 |
+| 2 | 2,000 | 0.194352 | 0.180174 | 0.135454 | 0.418991 | 10,290.59 | 2.671x | 133.57% | 0 |
+| 5 | 2,000 | 0.211965 | 0.452392 | 0.251789 | 1.003771 | 9,435.52 | 2.450x | 48.99% | 0 |
+| 10 | 2,000 | 0.133008 | 0.572419 | 0.512735 | 1.061637 | 15,036.64 | 3.904x | 39.04% | 0 |
+| 20 | 2,000 | 0.129324 | 0.905863 | 0.311360 | 3.873665 | 15,465.05 | 4.015x | 20.07% | 0 |
 
 The greater-than-100% two-client efficiency is a measured result of the very small in-memory workload and one-client scheduling/connection effects; it is not interpreted as physically superlinear CPU speedup. At 20 clients, queueing and contention reduce efficiency and increase p95 latency.
 
@@ -50,4 +50,4 @@ The store is in memory and not durable. Replication does not implement consensus
 
 ## 9. Conclusion and evidence
 
-`mvn clean verify`, the benchmark script, the Xvfb desktop launch, cluster script, diagrams, screenshots, and CSV evidence are the reproducible submission artifacts. The runtime evidence directory contains 1280×800 PNG captures from the running JavaFX process, including live dashboard metrics and performance-table output. Apache NetBeans itself was not installed on the VPS; Maven reactor build, resources, JavaFX launch, and `nbactions.xml` were verified instead, so full NetBeans GUI opening remains the only unperformed verification step.
+`mvn clean verify`, the benchmark script, the fault harness, the three-process cluster script, diagrams, screenshots, and CSV evidence are the reproducible submission artifacts. The runtime evidence directory contains 1280×800 PNG captures from the running JavaFX process, including live dashboard metrics and performance-table output. The requirement mapping is in `docs/testing/requirements-coverage.md`. Apache NetBeans itself was not installed on the VPS; Maven reactor build, resources, JavaFX launch, and `nbactions.xml` were verified instead, so full NetBeans GUI opening remains the only unperformed verification step.

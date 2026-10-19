@@ -1,6 +1,6 @@
 # HCS425 Distributed Key-Value System
 
-A Java 21 Maven multi-module implementation of a multi-threaded TCP client/server key-value store with a JavaFX/AtlantaFX monitoring console, concurrency benchmark harness, and a bounded single-writer replication demonstration. The console uses an independent Netdata-inspired observability layout: compact metric cards, dense dark panels, live throughput/latency charts, health indicators, and operational activity tables.
+A Java 21 Maven multi-module implementation of a multi-threaded TCP client/server key-value store with a JavaFX/AtlantaFX monitoring console, concurrency benchmark harness, and a bounded single-writer replication demonstration. The console provides a compact observability layout with metric cards, dense dark panels, live throughput/latency charts, health indicators, and operational activity tables.
 
 ## Modules
 
@@ -50,14 +50,14 @@ Keys cannot contain whitespace. PUT values may contain spaces but cannot contain
 
 ## Evidence
 
-Measured CSV output is written to `results/csv/performance-results.csv`, charts to `results/charts/`, screenshots to `results/screenshots/`, and the technical report to `docs/report/technical-report.md`. The final NetBeans-openable package is placed in `submission/`.
+Measured CSV output is written to `results/csv/performance-results.csv`, charts to `results/charts/`, screenshots to `results/screenshots/`, and the technical report to `docs/report/technical-report.md`. Requirement-by-requirement evidence is summarized in [requirements-coverage.md](docs/testing/requirements-coverage.md). The final NetBeans-openable package is placed in `submission/`.
 
 ## Screenshots
 
 The following screenshots were captured from the running JavaFX application under Xvfb:
 
-| Netdata-inspired dashboard | Key-value operation | Performance results | Replication |
+| Dashboard | Key-value operation | Performance results | Replication |
 |---|---|---|---|
-| [![Dashboard](results/screenshots/dashboard-netdata-inspired-live.png)](results/screenshots/dashboard-netdata-inspired-live.png) | [![PUT operation](results/screenshots/put-operation-netdata-inspired.png)](results/screenshots/put-operation-netdata-inspired.png) | [![Performance results](results/screenshots/performance-results.png)](results/screenshots/performance-results.png) | [![Replication](results/screenshots/replication.png)](results/screenshots/replication.png) |
+| [![Dashboard](results/screenshots/dashboard-live.png)](results/screenshots/dashboard-live.png) | [![PUT operation](results/screenshots/put-operation.png)](results/screenshots/put-operation.png) | [![Performance results](results/screenshots/performance-results.png)](results/screenshots/performance-results.png) | [![Replication](results/screenshots/replication.png)](results/screenshots/replication.png) |
 
-Additional redesigned captures: [PUT](results/screenshots/put-operation-netdata-inspired.png), [GET](results/screenshots/get-operation-netdata-inspired.png), and [key-value page](results/screenshots/key-value-netdata-inspired.png). Earlier functional captures are also available for [DELETE](results/screenshots/delete-operation.png), [LIST](results/screenshots/list-operation.png), [client manager](results/screenshots/client-manager.png), [server logs](results/screenshots/server-logs.png), and [performance page](results/screenshots/performance-page.png).
+Additional captures: [GET](results/screenshots/get-operation.png), [DELETE](results/screenshots/delete-operation.png), [LIST](results/screenshots/list-operation.png), [key-value page](results/screenshots/key-value.png), [client manager](results/screenshots/client-manager.png), [server logs](results/screenshots/server-logs.png), and [performance page](results/screenshots/performance-page.png).

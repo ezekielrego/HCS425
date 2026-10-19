@@ -157,7 +157,7 @@ public final class Hcs425DesktopApp extends Application {
     private ScrollPane pagePane(Node node) { ScrollPane scroll = new ScrollPane(node); scroll.setFitToWidth(true); scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); scroll.getStyleClass().add("content"); return scroll; }
 
     private Node dashboardPage() {
-        VBox box = new VBox(12); box.getStyleClass().add("netdata-content");
+        VBox box = new VBox(12); box.getStyleClass().add("observability-content");
         HBox strip = new HBox(8, styledLabel("OVERVIEW", "section-title"), styledLabel("live TCP telemetry · refreshed every 2 seconds", "section-meta")); strip.setAlignment(Pos.BASELINE_LEFT); strip.getStyleClass().add("section-strip");
         GridPane cards = new GridPane(); cards.setHgap(8); cards.setVgap(8);
         Label[] values = new Label[8]; String[] labels = {"SERVER STATUS", "ACTIVE CLIENTS", "TOTAL REQUESTS", "SUCCESSFUL", "FAILED", "AVG RESPONSE", "THROUGHPUT", "CURRENT NODE"}; String[] accents = {"metric-green", "metric-blue", "metric-cyan", "metric-green", "metric-red", "metric-orange", "metric-purple", "metric-teal"};
