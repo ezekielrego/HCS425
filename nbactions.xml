@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
-    <action name="run-server">
-        <actionName>run</actionName>
-        <goals><goal>package</goal></goals>
-        <properties><hcs425.host>127.0.0.1</hcs425.host><hcs425.port>5050</hcs425.port></properties>
+    <action name="verify">
+        <actionName>verify</actionName>
+        <goals><goal>verify</goal></goals>
     </action>
-    <action name="run-desktop">
-        <actionName>run</actionName>
-        <goals><goal>javafx:run</goal></goals>
-        <properties><hcs425.embedded>true</hcs425.embedded></properties>
+    <action name="test">
+        <actionName>test</actionName>
+        <goals><goal>test</goal></goals>
     </action>
-    <action name="run-benchmark">
-        <actionName>run</actionName>
+    <action name="package">
+        <actionName>package</actionName>
         <goals><goal>package</goal></goals>
     </action>
 </actions>

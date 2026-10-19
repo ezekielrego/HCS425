@@ -2,6 +2,19 @@
 
 A Java 21 Maven multi-module implementation of a multi-threaded TCP client/server key-value store with a JavaFX/AtlantaFX monitoring console, concurrency benchmark harness, and a bounded single-writer replication demonstration. The console provides a compact observability layout with metric cards, dense dark panels, live throughput/latency charts, health indicators, and operational activity tables.
 
+This repository is the complete HCS425 submission project. It contains the source code, automated tests, runtime launchers, measured performance evidence, architecture diagrams, screenshots, technical report, and a NetBeans-compatible Maven reactor.
+
+## What the system demonstrates
+
+- Java TCP communication using `ServerSocket` and persistent UTF-8 `Socket` connections.
+- Independent client handlers running in a bounded `ThreadPoolExecutor`.
+- A shared `ConcurrentHashMap` store with `PUT`, `GET`, `DELETE`, and framed `LIST` operations.
+- Connection, worker, request, latency, throughput, success, and failure metrics.
+- Client timeouts, malformed-request handling, unexpected-disconnect cleanup, and overload rejection.
+- A real TCP benchmark for 1, 2, 5, 10, and 20 concurrent clients.
+- A JavaFX console that performs real operations without blocking the JavaFX Application Thread.
+- A three-process replication demonstration with leader A and replicas B and C.
+
 ## Modules
 
 | Module | Purpose |
@@ -13,18 +26,79 @@ A Java 21 Maven multi-module implementation of a multi-threaded TCP client/serve
 | `benchmark` | Coordinated real-TCP 1/2/5/10/20-client benchmark |
 | `desktop` | JavaFX dashboard with AtlantaFX 2.0.1 theme and live operational controls |
 
-## Build and run
+The root project is a Maven parent project. Build from the repository root so Maven builds modules in dependency order: `shared` → `server` → `client` → `replication` → `benchmark` → `desktop`.
 
-Requirements: Java 21, Maven 3.8+, X11/Xvfb for the desktop application.
+## Requirements
+
+For the supplied VPS setup, use Java JDK 21, Maven 3.8 or newer, Git, and a graphical display for the desktop console. JavaFX dependencies are resolved by Maven. On a headless Linux VPS, Xvfb is sufficient for automated launch and screenshots.
+
+Check the environment before opening the project:
+
+```bash
+java -version
+javac -version
+mvn -version
+```
+
+## Open and run from Apache NetBeans
+
+1. Start Apache NetBeans.
+2. Select **File → Open Project**.
+3. Choose the repository root, the directory containing the root `pom.xml`.
+4. Allow NetBeans to resolve Maven dependencies and index the six modules.
+5. Right-click the root project and choose **Build** or **Test**. The custom Maven actions in `nbactions.xml` provide `verify`, `test`, and `package` actions.
+
+The safest way to launch long-running applications from NetBeans is the built-in terminal, because the scripts configure the correct multi-module classpaths and process lifecycle. Open **Window → IDE Tools → Terminal**, change to the repository root, and use one terminal tab per process.
+
+Run the complete build and tests:
 
 ```bash
 mvn clean verify
-./scripts/start-server.sh
-./scripts/start-desktop.sh
-./scripts/run-benchmarks.sh
 ```
 
-The server listens on `127.0.0.1:5050` by default. Override with `-Dhcs425.port=...`, `-Dhcs425.host=...`, or `-Dhcs425.workers=...`. The desktop starts an embedded local node when the port is free; set `-Dhcs425.embedded=false` to connect to an independently launched server.
+Run the desktop with its embedded local server:
+
+```bash
+./scripts/start-desktop.sh
+```
+
+On a normal desktop this uses the existing display. On a headless VPS, the script starts Xvfb automatically when `DISPLAY` is unset. To launch explicitly on a virtual display:
+
+```bash
+Xvfb :99 -screen 0 1280x800x24 -ac +extension GLX &
+export DISPLAY=:99
+./scripts/start-desktop.sh
+```
+
+The desktop starts an embedded server on `127.0.0.1:5050` by default. To run the server independently, use two terminal tabs:
+
+```bash
+# Terminal 1
+./scripts/start-server.sh
+
+# Terminal 2
+HCS425_EMBEDDED=false ./scripts/start-desktop.sh
+```
+
+Do not run the root command `mvn javafx:run`; the JavaFX main class belongs to the `desktop` module. If launching directly with Maven, use:
+
+```bash
+mvn -pl desktop javafx:run -Dhcs425.embedded=true
+```
+
+Stop a running server, desktop, or cluster with `Ctrl+C`. Do not start the standalone server on port 5050 at the same time as the desktop's embedded server.
+
+## Simple demonstration flow
+
+1. Run `./scripts/start-desktop.sh`.
+2. Open **Dashboard** and show live status, clients, requests, latency, throughput, activity, and health.
+3. Open **Key-Value Store** and execute PUT, GET, LIST, and DELETE.
+4. Open **Client Manager** and launch simulated clients.
+5. Open **Performance Testing**, choose 1, 2, 5, 10, or 20 clients, and run a workload.
+6. Open **Server Logs** to search or export events.
+7. Open **Replication** when the three-process cluster is running.
+
+The server listens on `127.0.0.1:5050` by default. Override with `HCS425_HOST`, `HCS425_PORT`, and `HCS425_WORKERS` for `start-server.sh`, or with `-Dhcs425.host=...`, `-Dhcs425.port=...`, and `-Dhcs425.workers=...` when launching Java directly.
 
 The cluster demonstration uses:
 
@@ -32,6 +106,64 @@ The cluster demonstration uses:
 ./scripts/start-cluster.sh
 # leader: 127.0.0.1:5050; replica B: 5051; replica C: 5052
 ```
+
+Leave the cluster terminal running, then use another terminal to verify propagation:
+
+```bash
+printf 'PUT demo replicated-value\n' | nc -w 2 127.0.0.1 5050
+sleep 1
+printf 'GET demo\n' | nc -w 2 127.0.0.1 5051
+printf 'GET demo\n' | nc -w 2 127.0.0.1 5052
+```
+
+Both replicas should return `OK VALUE replicated-value`. Cluster logs are written to `logs/node-A.log`, `logs/node-B.log`, and `logs/node-C.log`.
+
+## Testing and performance workflow
+
+Run all automated protocol, store, real TCP, concurrency, replication, benchmark-smoke, and desktop-resource tests:
+
+```bash
+mvn clean verify
+```
+
+Run the full measured fixed-total-workload benchmark:
+
+```bash
+./scripts/run-benchmarks.sh
+```
+
+This executes 2,000 total operations at 1, 2, 5, 10, and 20 clients using real TCP connections. It writes `results/csv/performance-results.csv` and the SVG charts in `results/charts/`. The CSV contains mean latency, median latency, p95 latency, throughput, speedup, efficiency, and errors.
+
+Latest measured run on the VPS:
+
+| Clients | Operations | Throughput ops/s | Mean ms | p95 ms | Speedup | Efficiency | Errors |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 2,000 | 3,852.01 | 0.250 | 0.721 | 1.000x | 100.00% | 0 |
+| 2 | 2,000 | 10,290.59 | 0.180 | 0.419 | 2.671x | 133.57% | 0 |
+| 5 | 2,000 | 9,435.52 | 0.452 | 1.004 | 2.450x | 48.99% | 0 |
+| 10 | 2,000 | 15,036.64 | 0.572 | 1.062 | 3.904x | 39.04% | 0 |
+| 20 | 2,000 | 15,465.05 | 0.906 | 3.874 | 4.015x | 20.07% | 0 |
+
+Run the unexpected-client-failure test:
+
+```bash
+./scripts/run-fault-test.sh
+```
+
+The harness aborts one socket while nine other clients continue, then connects a replacement client. Evidence is written to `results/csv/fault-tolerance.txt`.
+
+For a focused module test, use Maven's module selector:
+
+```bash
+mvn -pl shared test
+mvn -pl server -am test
+mvn -pl client -am test
+mvn -pl replication -am test
+mvn -pl benchmark -am test
+mvn -pl desktop -am test
+```
+
+The complete requirement-to-evidence mapping, including the advanced replication limitation, is in [requirements-coverage.md](docs/testing/requirements-coverage.md).
 
 ## Protocol
 
@@ -48,9 +180,87 @@ STATS
 
 Keys cannot contain whitespace. PUT values may contain spaces but cannot contain a newline. LIST responses are framed as `OK LIST count`, exactly `count` base64-url encoded `ITEM` lines, and `END LIST`. See [protocol.md](docs/protocol/protocol.md).
 
-## Evidence
+Example exchange:
+
+```text
+PUT student01 Alice in Harare
+OK STORED
+GET student01
+OK VALUE Alice in Harare
+DELETE student01
+OK DELETED
+LIST
+OK LIST 0
+END LIST
+```
+
+A client may keep one connection open and send multiple commands. Malformed requests return an error response; idle clients are closed after the server read timeout.
+
+## Architecture and synchronization
+
+```text
+JavaFX Client / Benchmark Clients
+            │ persistent UTF-8 TCP
+            ▼
+       ServerSocket acceptor
+            │
+            ▼
+ bounded ExecutorService workers
+            │
+            ▼
+     Protocol parser/executor
+            │
+            ▼
+ ConcurrentHashMap key-value store
+```
+
+The acceptor is separate from client workers. Each accepted connection is registered, assigned to the bounded pool, processed independently, and removed in a `finally` block. A slow, malformed, timed-out, or disconnected client does not terminate the server or stop unrelated workers. Basic map operations are thread-safe through `ConcurrentHashMap`; `LIST` creates a sorted snapshot instead of exposing live map state.
+
+The advanced topology uses a single-writer leader:
+
+```text
+                 ┌──────────────┐
+                 │ Server A     │
+                 │ Leader       │
+                 └──────┬───────┘
+                        │ ordered async updates
+                 ┌──────┴───────┐
+                 ▼              ▼
+          Server B         Server C
+          Replica           Replica
+```
+
+Writes are acknowledged after the leader updates its local in-memory store and are then propagated with sequence numbers. This is eventual asynchronous replication, not quorum durability. Automatic leader election and network-partition resolution are intentionally not claimed.
+
+## Evidence and submission files
 
 Measured CSV output is written to `results/csv/performance-results.csv`, charts to `results/charts/`, screenshots to `results/screenshots/`, and the technical report to `docs/report/technical-report.md`. Requirement-by-requirement evidence is summarized in [requirements-coverage.md](docs/testing/requirements-coverage.md). The final NetBeans-openable package is placed in `submission/`.
+
+Important submission files:
+
+- [Technical report](docs/report/technical-report.md)
+- [Protocol specification](docs/protocol/protocol.md)
+- [Core architecture diagram](docs/architecture/architecture.svg)
+- [Replication architecture diagram](docs/architecture/replication.svg)
+- [Test evidence](docs/testing/test-evidence.md)
+- [VPS environment record](docs/testing/vps-environment.md)
+- [Open-source notices](LICENSES.md)
+- [Submission ZIP](submission/hcs425-distributed-system.zip)
+
+The ZIP excludes Maven `target/` directories, temporary logs, caches, and unrelated VPS files. Recreate it after changing evidence with:
+
+```bash
+zip -r -q -FS submission/hcs425-distributed-system.zip . \
+  -x './.git/*' './*/target/*' './submission/*.zip' './logs/*' './*.log'
+```
+
+## Limitations
+
+- The key-value store is in memory and is not durable across process restarts.
+- Replication is single-writer asynchronous eventual consistency.
+- Replica unavailability is logged while the leader continues local service.
+- Automatic leader election, quorum commit, consensus, network-partition resolution, and automatic missed-update reconciliation are not implemented or claimed.
+- Full Apache NetBeans GUI opening was not performed on the headless VPS; Maven reactor build, dependency resolution, tests, JavaFX launch, resources, and NetBeans Maven metadata were verified.
 
 ## Screenshots
 
