@@ -1,6 +1,6 @@
 # HCS425 Distributed Key-Value System
 
-A Java 21 Maven multi-module implementation of a multi-threaded TCP client/server key-value store with a JavaFX/AtlantaFX monitoring console, concurrency benchmark harness, and a bounded single-writer replication demonstration. The console provides a compact observability layout with metric cards, dense dark panels, live throughput/latency charts, health indicators, and operational activity tables.
+A Java 21 Maven multi-module implementation of a multi-threaded TCP client/server key-value store with a JavaFX/AtlantaFX monitoring console, concurrency benchmark harness, and a bounded single-writer replication demonstration. The console provides a compact observability layout with metric cards, dense dark/light panels, live throughput/latency charts, health indicators, and operational activity tables.
 
 This repository is the complete HCS425 submission project. It contains the source code, automated tests, runtime launchers, measured performance evidence, architecture diagrams, screenshots, technical report, and a NetBeans-compatible Maven reactor.
 
@@ -274,4 +274,4 @@ The following screenshots were captured from the running JavaFX application unde
 |---|---|---|---|
 | [![Dashboard](results/screenshots/dashboard-live.png)](results/screenshots/dashboard-live.png) | [![PUT operation](results/screenshots/put-operation.png)](results/screenshots/put-operation.png) | [![Performance results](results/screenshots/performance-results.png)](results/screenshots/performance-results.png) | [![Replication](results/screenshots/replication.png)](results/screenshots/replication.png) |
 
-Additional captures: [GET](results/screenshots/get-operation.png), [DELETE](results/screenshots/delete-operation.png), [LIST](results/screenshots/list-operation.png), [key-value page](results/screenshots/key-value.png), [client manager](results/screenshots/client-manager.png), [server logs](results/screenshots/server-logs.png), and [performance page](results/screenshots/performance-page.png).
+Additional captures: [GET](results/screenshots/get-operation.png), [DELETE](results/screenshots/delete-operation.png), [LIST](results/screenshots/list-operation.png), [key-value page](results/screenshots/key-value.png), [client manager](results/screenshots/client-manager.png), [server logs](results/screenshots/server-logs.png), [performance page](results/screenshots/performance-page.png), and [light mode](results/screenshots/light-mode.png).

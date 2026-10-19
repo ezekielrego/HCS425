@@ -82,3 +82,48 @@
 .small-button { -fx-font-size: 10px; -fx-padding: 5 8; }
 .text-area { -fx-font-family: "DejaVu Sans Mono"; -fx-font-size: 10px; -fx-control-inner-background: #0b0f14; }
 .text-area .content { -fx-background-color: #0b0f14; }
+
+/* Light theme overrides. The dashboard uses fixed observability colours above,
+   so the AtlantaFX user-agent theme alone cannot recolour these panels. */
+.light-theme { -fx-background-color: #f4f7fb; -fx-text-fill: #263548; }
+.light-theme .sidebar, .light-theme .topbar { -fx-background-color: #ffffff; -fx-border-color: #d9e2ec; }
+.light-theme .brand { -fx-text-fill: #16263b; }
+.light-theme .brand-subtitle, .light-theme .nav-label, .light-theme .toolbar-label { -fx-text-fill: #64748b; }
+.light-theme .sidebar .separator .line, .light-theme .separator .line { -fx-border-color: #d9e2ec; }
+.light-theme .nav-button { -fx-text-fill: #526174; }
+.light-theme .nav-button:hover { -fx-background-color: #eef4fb; -fx-text-fill: #1e3a5f; }
+.light-theme .nav-button.selected { -fx-background-color: #e6f1ff; -fx-text-fill: #1769aa; -fx-border-color: #2f8cff; }
+.light-theme .page-title { -fx-text-fill: #17263a; }
+.light-theme .page-subtitle, .light-theme .section-meta, .light-theme .metric-subtext, .light-theme .panel-meta, .light-theme .hint, .light-theme .muted { -fx-text-fill: #687991; }
+.light-theme .section-title, .light-theme .panel-title { -fx-text-fill: #263a52; }
+.light-theme .content, .light-theme .observability-content, .light-theme .scroll-pane, .light-theme .viewport { -fx-background-color: #f4f7fb; }
+.light-theme .metric-card, .light-theme .panel, .light-theme .chart-panel { -fx-background-color: #ffffff; -fx-border-color: #d9e2ec; }
+.light-theme .metric-card:hover { -fx-border-color: #8cb7df; }
+.light-theme .metric-label { -fx-text-fill: #66778d; }
+.light-theme .metric-value { -fx-text-fill: #1b2b41; }
+.light-theme .chart-panel .chart-plot-background { -fx-background-color: #ffffff; }
+.light-theme .chart-panel .chart-vertical-grid-lines, .light-theme .chart-panel .chart-horizontal-grid-lines { -fx-stroke: #dbe4ee; }
+.light-theme .chart-panel .axis { -fx-tick-label-fill: #65758b; }
+.light-theme .chart-panel .axis-label, .light-theme .chart-panel .chart-title { -fx-text-fill: #53657b; }
+.light-theme .chart-panel .default-color0.chart-line-symbol { -fx-background-color: #2f8cff, #ffffff; }
+.light-theme .chart-panel .default-color1.chart-line-symbol { -fx-background-color: #16a6b5, #ffffff; }
+.light-theme .legend-item { -fx-text-fill: #52667e; }
+.light-theme .health-row { -fx-border-color: #d9e2ec; }
+.light-theme .health-name { -fx-text-fill: #52657b; }
+.light-theme .health-value { -fx-text-fill: #26384e; }
+.light-theme .table-view { -fx-background-color: #ffffff; -fx-border-color: #d9e2ec; }
+.light-theme .table-view .column-header-background { -fx-background-color: #edf2f7; }
+.light-theme .table-view .column-header, .light-theme .table-view .filler { -fx-border-color: #d9e2ec; }
+.light-theme .table-view .column-header .label { -fx-text-fill: #607188; }
+.light-theme .table-row-cell { -fx-background-color: #ffffff; -fx-border-color: transparent transparent #e2e8f0 transparent; }
+.light-theme .table-row-cell:filled:hover { -fx-background-color: #eef6ff; }
+.light-theme .table-cell { -fx-text-fill: #34465d; }
+.light-theme .titled-pane > .title { -fx-background-color: #ffffff; -fx-border-color: #d9e2ec; }
+.light-theme .titled-pane > .title > .text { -fx-fill: #30445c; }
+.light-theme .titled-pane > .content { -fx-background-color: #ffffff; -fx-border-color: #d9e2ec; }
+.light-theme .range-button { -fx-background-color: #f7f9fc; -fx-text-fill: #5d6d83; -fx-border-color: #d4deea; }
+.light-theme .range-button:selected { -fx-background-color: #dceeff; -fx-text-fill: #1769aa; }
+.light-theme .live-badge { -fx-background-color: #e3f7ed; -fx-text-fill: #168557; }
+.light-theme .text-field, .light-theme .text-area, .light-theme .combo-box, .light-theme .spinner { -fx-background-color: #ffffff; -fx-text-fill: #263548; }
+.light-theme .text-area { -fx-control-inner-background: #ffffff; }
+.light-theme .text-area .content { -fx-background-color: #ffffff; }

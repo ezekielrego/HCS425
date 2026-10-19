@@ -61,17 +61,18 @@ public final class Hcs425DesktopApp extends Application {
     private Label connectionStatus;
     private Label pageTitle;
     private Label pageSubtitle;
-    private boolean dark = true;
+    private boolean dark = !"light".equalsIgnoreCase(System.getProperty("hcs425.theme", "dark"));
     private Timeline refresh;
     private Timeline dashboardTimeline;
 
     @Override public void start(Stage primaryStage) {
         stage = primaryStage;
-        Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
+        Application.setUserAgentStylesheet((dark ? new PrimerDark() : new PrimerLight()).getUserAgentStylesheet());
         startLocalServerIfAvailable();
         client = new KeyValueClient(host, port, 3_000);
         asyncClient = new AsyncKeyValueClient(client);
         shell = new BorderPane();
+        shell.getStyleClass().add(dark ? "dark-theme" : "light-theme");
         shell.setLeft(buildSidebar());
         shell.setTop(buildHeader());
         showPage("Dashboard");
@@ -112,11 +113,17 @@ public final class Hcs425DesktopApp extends Application {
             if (i == 0) button.getStyleClass().add("selected");
         }
         VBox.setVgrow(navigation, Priority.ALWAYS);
-        ToggleButton theme = new ToggleButton("☾  Dark mode"); theme.setMaxWidth(Double.MAX_VALUE); theme.setSelected(true);
-        theme.setOnAction(e -> { dark = theme.isSelected(); Application.setUserAgentStylesheet((dark ? new PrimerDark() : new PrimerLight()).getUserAgentStylesheet()); theme.setText(dark ? "☾  Dark mode" : "☀  Light mode"); });
+        ToggleButton theme = new ToggleButton("☾  Dark mode"); theme.setMaxWidth(Double.MAX_VALUE); theme.setSelected(dark);
+        theme.setOnAction(e -> { dark = theme.isSelected(); applyTheme(dark); theme.setText(dark ? "☾  Dark mode" : "☀  Light mode"); });
         connectionStatus = new Label("● Connecting…"); connectionStatus.getStyleClass().addAll("status-offline", "sidebar-status");
         sidebar.getChildren().addAll(navigation, new Separator(), connectionStatus, theme);
         return sidebar;
+    }
+
+    private void applyTheme(boolean darkMode) {
+        shell.getStyleClass().removeAll("dark-theme", "light-theme");
+        shell.getStyleClass().add(darkMode ? "dark-theme" : "light-theme");
+        Application.setUserAgentStylesheet((darkMode ? new PrimerDark() : new PrimerLight()).getUserAgentStylesheet());
     }
 
     private HBox buildHeader() {
