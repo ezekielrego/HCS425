@@ -290,4 +290,37 @@ The following screenshots were captured from the running JavaFX application unde
 |---|---|---|---|
 | [![Dashboard](results/screenshots/dashboard-live.png)](results/screenshots/dashboard-live.png) | [![PUT operation](results/screenshots/put-operation.png)](results/screenshots/put-operation.png) | [![Performance results](results/screenshots/performance-results.png)](results/screenshots/performance-results.png) | [![Replication](results/screenshots/replication.png)](results/screenshots/replication.png) |
 
-Additional captures: [GET](results/screenshots/get-operation.png), [DELETE](results/screenshots/delete-operation.png), [LIST](results/screenshots/list-operation.png), [key-value page](results/screenshots/key-value.png), [client manager](results/screenshots/client-manager.png), [server logs](results/screenshots/server-logs.png), [performance page](results/screenshots/performance-page.png), and [light mode](results/screenshots/light-mode.png).
+### Assignment evidence gallery
+
+The gallery below makes the required implementation visible in the submission. Each image is a capture from the running JavaFX console; measured benchmark and fault-tolerance details are also linked in the evidence table.
+
+#### Key-value operations
+
+| PUT | GET | DELETE | LIST |
+|---|---|---|---|
+| [![PUT operation](results/screenshots/put-operation.png)](results/screenshots/put-operation.png) | [![GET operation](results/screenshots/get-operation.png)](results/screenshots/get-operation.png) | [![DELETE operation](results/screenshots/delete-operation.png)](results/screenshots/delete-operation.png) | [![LIST operation](results/screenshots/list-operation.png)](results/screenshots/list-operation.png) |
+
+#### Monitoring and connected clients
+
+| Dashboard | Key-value page | Connected clients | Server logs |
+|---|---|---|---|
+| [![Dashboard](results/screenshots/dashboard-live.png)](results/screenshots/dashboard-live.png) | [![Key-value page](results/screenshots/key-value.png)](results/screenshots/key-value.png) | [![Client manager](results/screenshots/client-manager.png)](results/screenshots/client-manager.png) | [![Server logs](results/screenshots/server-logs.png)](results/screenshots/server-logs.png) |
+
+#### Concurrency, performance and replication
+
+| Performance controls | Measured results | Replication monitor | Light theme |
+|---|---|---|---|
+| [![Performance page](results/screenshots/performance-page.png)](results/screenshots/performance-page.png) | [![Performance results](results/screenshots/performance-results.png)](results/screenshots/performance-results.png) | [![Replication](results/screenshots/replication.png)](results/screenshots/replication.png) | [![Light mode](results/screenshots/light-mode.png)](results/screenshots/light-mode.png) |
+
+### Requirement-to-evidence map
+
+| Assignment requirement | README evidence |
+|---|---|
+| TCP client-server communication and server status | [Dashboard](results/screenshots/dashboard-live.png), [key-value page](results/screenshots/key-value.png), [protocol specification](docs/protocol/protocol.md) |
+| PUT, GET, DELETE and LIST operations | [PUT](results/screenshots/put-operation.png), [GET](results/screenshots/get-operation.png), [DELETE](results/screenshots/delete-operation.png), [LIST](results/screenshots/list-operation.png) |
+| At least 10 simultaneous clients and 20-client test | [Client manager](results/screenshots/client-manager.png), [performance controls](results/screenshots/performance-page.png), [measured CSV](results/csv/performance-results.csv) |
+| Threading, synchronization and race-condition protection | [Core architecture diagram](docs/architecture/architecture.svg), [requirements coverage](docs/testing/requirements-coverage.md), [test evidence](docs/testing/test-evidence.md) |
+| Response time, throughput, speedup and efficiency | [Performance results](results/screenshots/performance-results.png), [performance CSV](results/csv/performance-results.csv), [technical report](docs/report/technical-report.md) |
+| Malformed requests and failed-client cleanup | [Server logs](results/screenshots/server-logs.png), [fault-tolerance evidence](results/csv/fault-tolerance.txt) |
+| Replicated servers and synchronization behavior | [Replication monitor](results/screenshots/replication.png), [replication diagram](docs/architecture/replication.svg), [replication evidence](results/csv/replication-evidence.txt) |
+| Architecture and implementation explanation | [Architecture diagrams](docs/architecture/), [technical report](docs/report/technical-report.md) |
