@@ -50,9 +50,7 @@ mvn -version
 
 ## Open and run from Apache NetBeans
 
-For browser access from a laptop, see the complete [remote desktop and NetBeans workflow](docs/testing/remote-desktop-netbeans.md). The underlying VNC/noVNC services remain localhost-only; the optional public address is protected by HTTPS and authentication.
-
-The configured public desktop address is `https://desktop.techinn.co.zw/`; it requires authentication and becomes reachable after its DNS `A` record points to the VPS.
+This is the normal lecturer/reviewer workflow. The lecturer should use their own installed Apache NetBeans; access to the author's VPS, remote desktop, browser gateway, or public desktop address is not required.
 
 1. Start Apache NetBeans.
 2. Select **File → Open Project**.
@@ -99,6 +97,8 @@ mvn -pl desktop javafx:run -Dhcs425.embedded=true
 ```
 
 Stop a running server, desktop, or cluster with `Ctrl+C`. Do not start the standalone server on port 5050 at the same time as the desktop's embedded server.
+
+The repository also contains a [VPS-only remote desktop note](docs/testing/remote-desktop-netbeans.md) used by the author while developing and capturing evidence. It is not part of the required evaluation workflow.
 
 ## Simple demonstration flow
 

@@ -34,4 +34,4 @@ mvn clean verify
 ./scripts/start-cluster.sh
 ```
 
-The JavaFX console was launched and screenshots were captured under Xvfb. Apache NetBeans itself was not installed on the VPS; Maven reactor build, dependency resolution, resources, JavaFX launch, and `nbactions.xml` were verified instead. Full NetBeans GUI opening remains the only environment-level verification not performed.
+The JavaFX console was launched and screenshots were captured under Xvfb. Apache NetBeans 31 was used on the author's VPS display to verify project opening and the Maven workflow. The lecturer does not need access to that remote desktop and can open the root `pom.xml` in their own NetBeans installation.

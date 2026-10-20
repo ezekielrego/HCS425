@@ -1,4 +1,6 @@
-# Remote browser desktop and NetBeans workflow
+# VPS-only remote browser desktop and NetBeans workflow
+
+> This is a private development note for the author who worked on the VPS without a local desktop. It is not required for the lecturer or evaluator. The lecturer should open the root `pom.xml` in their own Apache NetBeans installation and use the normal Maven commands in `README.md`.
 
 The VPS has a lightweight XFCE desktop available through noVNC. The browser gateway and the underlying VNC server listen on `127.0.0.1` only. This is intentional: do not open ports 5900 or 6080 publicly.
 
