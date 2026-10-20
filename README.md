@@ -4,6 +4,14 @@ A Java 21 Maven multi-module implementation of a multi-threaded TCP client/serve
 
 This repository is the complete HCS425 submission project. It contains the source code, automated tests, runtime launchers, measured performance evidence, architecture diagrams, screenshots, technical report, and a NetBeans-compatible Maven reactor.
 
+## Submission information
+
+| Field | Details |
+|---|---|
+| Student | Ezekiel Rego |
+| Registration number | M230913 |
+| Course | HCS425 |
+
 ## What the system demonstrates
 
 - Java TCP communication using `ServerSocket` and persistent UTF-8 `Socket` connections.
@@ -267,6 +275,14 @@ zip -r -q -FS submission/hcs425-distributed-system.zip . \
 - Apache NetBeans 31 GUI opening was verified on the VPS display `:99` with JDK 21; the Maven reactor build, dependency resolution, tests, JavaFX launch, resources, and NetBeans Maven metadata were also verified.
 
 ## Screenshots
+
+### Submission environment evidence
+
+These two captures show the project opened in Apache NetBeans and the Maven verification completing successfully:
+
+| Project opened | Build verification |
+|---|---|
+| [![Project opened](results/screenshots/01-project-open.png)](https://imglink.cc/cdn/8enQr1cRVX.png) | [![Build verification](results/screenshots/02-build-success.png)](https://imglink.cc/cdn/5v4aDrlbGI.png) |
 
 The following screenshots were captured from the running JavaFX application under Xvfb:
 
