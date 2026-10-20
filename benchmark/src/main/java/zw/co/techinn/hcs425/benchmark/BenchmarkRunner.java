@@ -20,20 +20,27 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /** Fixed-total-workload TCP benchmark with coordinated starts and measured latency samples. */
 public final class BenchmarkRunner {
-    private static final int[] CLIENT_COUNTS = {1, 2, 5, 10, 20};
-    private static final int TOTAL_OPERATIONS = 2_000;
+    private static final int[] DEFAULT_CLIENT_COUNTS = {1, 2, 5, 10, 20};
+    private static final int DEFAULT_TOTAL_OPERATIONS = 2_000;
 
     private BenchmarkRunner() { }
 
     public static void main(String[] args) throws Exception {
         Path output = Path.of(System.getProperty("hcs425.results", "results/csv/performance-results.csv"));
+        int[] clientCounts = configuredClientCounts();
+        int totalOperations = Integer.getInteger("hcs425.operations", DEFAULT_TOTAL_OPERATIONS);
+        if (totalOperations <= 0) throw new IllegalArgumentException("hcs425.operations must be positive");
         Files.createDirectories(output.toAbsolutePath().getParent());
-        try (KeyValueServer server = new KeyValueServer("127.0.0.1", 0, 32, "benchmark")) {
+        int workerCount = Integer.getInteger("hcs425.workers", 32);
+        try (KeyValueServer server = new KeyValueServer("127.0.0.1", 0, workerCount, "benchmark")) {
             server.start();
             List<BenchmarkResult> results = new ArrayList<>();
             double baseline = 0;
-            for (int clients : CLIENT_COUNTS) {
-                BenchmarkResult result = runOnce(server.port(), clients, TOTAL_OPERATIONS);
+            for (int clients : clientCounts) {
+                if (totalOperations % clients != 0) {
+                    throw new IllegalArgumentException("total operations must be divisible by client count: " + clients);
+                }
+                BenchmarkResult result = runOnce(server.port(), clients, totalOperations);
                 if (baseline == 0) baseline = result.elapsedSeconds();
                 result = new BenchmarkResult(result.clients(), result.operations(), result.elapsedSeconds(), result.meanLatencyMs(),
                         result.medianLatencyMs(), result.p95LatencyMs(), result.throughputOpsSec(), baseline / result.elapsedSeconds(),
@@ -44,6 +51,21 @@ public final class BenchmarkRunner {
             }
             writeCsv(output, results);
         }
+    }
+
+    private static int[] configuredClientCounts() {
+        String configured = System.getProperty("hcs425.clients", "").trim();
+        if (configured.isEmpty()) return DEFAULT_CLIENT_COUNTS;
+        int[] counts = java.util.Arrays.stream(configured.split(","))
+                .map(String::trim)
+                .filter(value -> !value.isEmpty())
+                .mapToInt(Integer::parseInt)
+                .distinct()
+                .toArray();
+        if (counts.length == 0 || java.util.Arrays.stream(counts).anyMatch(value -> value <= 0)) {
+            throw new IllegalArgumentException("hcs425.clients must contain positive comma-separated integers");
+        }
+        return counts;
     }
 
     public static BenchmarkResult runOnce(int port, int clients, int operations) throws InterruptedException {

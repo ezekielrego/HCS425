@@ -8,4 +8,4 @@ if [[ -z "${DISPLAY:-}" ]]; then
   xvfb_pid=$!
   trap 'kill "$xvfb_pid" 2>/dev/null || true' EXIT
 fi
-exec mvn -q -pl desktop javafx:run -Dhcs425.embedded="${HCS425_EMBEDDED:-true}"
+exec mvn -q -pl desktop javafx:run -Dhcs425.embedded="${HCS425_EMBEDDED:-true}" -Dhcs425.theme="${HCS425_THEME:-light}" -Dhcs425.workers="${HCS425_WORKERS:-32}"

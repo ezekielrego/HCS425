@@ -51,6 +51,7 @@ public final class Hcs425DesktopApp extends Application {
     private final ObservableList<BenchmarkResult> benchmarkResults = FXCollections.observableArrayList();
     private final String host = System.getProperty("hcs425.host", "127.0.0.1");
     private final int port = Integer.getInteger("hcs425.port", 5050);
+    private final int workerCount = Integer.getInteger("hcs425.workers", 32);
     private KeyValueServer embeddedServer;
     private KeyValueClient client;
     private AsyncKeyValueClient asyncClient;
@@ -61,7 +62,7 @@ public final class Hcs425DesktopApp extends Application {
     private Label connectionStatus;
     private Label pageTitle;
     private Label pageSubtitle;
-    private boolean dark = !"light".equalsIgnoreCase(System.getProperty("hcs425.theme", "dark"));
+    private boolean dark = !"light".equalsIgnoreCase(System.getProperty("hcs425.theme", "light"));
     private Timeline refresh;
     private Timeline dashboardTimeline;
 
@@ -89,7 +90,7 @@ public final class Hcs425DesktopApp extends Application {
     private void startLocalServerIfAvailable() {
         if (!Boolean.parseBoolean(System.getProperty("hcs425.embedded", "true"))) return;
         try {
-            embeddedServer = new KeyValueServer(host, port, 32, "desktop-local");
+            embeddedServer = new KeyValueServer(host, port, workerCount, "desktop-local");
             embeddedServer.start();
         } catch (IOException ignored) {
             embeddedServer = null; // an independently launched server owns the configured port
@@ -210,7 +211,7 @@ public final class Hcs425DesktopApp extends Application {
         VBox box = new VBox(16); box.getStyleClass().add("content");
         TableView<ClientConnectionInfo> table = new TableView<>(); table.getColumns().add(column("Client ID", ClientConnectionInfo::clientId)); table.getColumns().add(column("Remote", ClientConnectionInfo::remoteAddress)); table.getColumns().add(column("Connected", c -> TIME.format(c.connectedAt()))); table.getColumns().add(column("Requests", c -> Long.toString(c.requestCount()))); table.getColumns().add(column("Last activity", c -> TIME.format(c.lastActivity())));
         Label status = new Label("Live view refreshes every two seconds"); status.getStyleClass().add("hint");
-        Spinner<Integer> count = new Spinner<>(1, 20, 10); Button simulate = button("Launch simulated clients", "action-button"); simulate.setOnAction(e -> simulateClients(count.getValue(), status));
+        Spinner<Integer> count = new Spinner<>(1, 100, 10); Button simulate = button("Launch simulated clients", "action-button"); simulate.setOnAction(e -> simulateClients(count.getValue(), status));
         box.getChildren().addAll(new HBox(10, new Label("Concurrent clients"), count, simulate), status, table);
         Timeline t = new Timeline(new KeyFrame(Duration.seconds(2), e -> { if (embeddedServer != null) table.getItems().setAll(embeddedServer.clients()); })); t.setCycleCount(Timeline.INDEFINITE); t.play();
         return pagePane(box);
@@ -218,7 +219,7 @@ public final class Hcs425DesktopApp extends Application {
 
     private Node performancePage() {
         VBox box = new VBox(16); box.getStyleClass().add("content");
-        ComboBox<Integer> clients = new ComboBox<>(FXCollections.observableArrayList(1, 2, 5, 10, 20)); clients.setValue(10);
+        ComboBox<Integer> clients = new ComboBox<>(FXCollections.observableArrayList(1, 2, 5, 10, 20, 50, 100)); clients.setValue(10);
         Spinner<Integer> operations = new Spinner<>(100, 20_000, 2_000, 100); Label status = new Label("Fixed-total workload; read/write mix is measured by BenchmarkRunner."); status.getStyleClass().add("hint");
         TableView<BenchmarkResult> table = new TableView<>(benchmarkResults); table.getColumns().add(column("Clients", r -> Integer.toString(r.clients()))); table.getColumns().add(column("Operations", r -> Integer.toString(r.operations()))); table.getColumns().add(column("Elapsed", r -> String.format("%.3fs", r.elapsedSeconds()))); table.getColumns().add(column("Mean", r -> String.format("%.3fms", r.meanLatencyMs()))); table.getColumns().add(column("p95", r -> String.format("%.3fms", r.p95LatencyMs()))); table.getColumns().add(column("Throughput", r -> String.format("%.1f", r.throughputOpsSec()))); table.getColumns().add(column("Speedup", r -> String.format("%.2fx", r.speedup()))); table.getColumns().add(column("Efficiency", r -> String.format("%.1f%%", r.efficiencyPercent()))); table.getColumns().add(column("Errors", r -> Integer.toString(r.errors())));
         Button start = button("Start test", "action-button"); Button export = button("Export CSV", "action-button"); start.setOnAction(e -> { start.setDisable(true); status.setText("Running real TCP benchmark…"); background.submit(() -> { try { BenchmarkResult r = BenchmarkRunner.runOnce(port, clients.getValue(), operations.getValue()); Platform.runLater(() -> { benchmarkResults.add(r); status.setText("Completed: " + r.operations() + " operations, " + String.format("%.1f ops/s", r.throughputOpsSec())); start.setDisable(false); }); } catch (Exception ex) { Platform.runLater(() -> { status.setText("Benchmark failed: " + ex.getMessage()); start.setDisable(false); }); } }); });

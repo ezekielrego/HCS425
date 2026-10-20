@@ -20,6 +20,7 @@ This repository is the complete HCS425 submission project. It contains the sourc
 - Connection, worker, request, latency, throughput, success, and failure metrics.
 - Client timeouts, malformed-request handling, unexpected-disconnect cleanup, and overload rejection.
 - A real TCP benchmark for 1, 2, 5, 10, and 20 concurrent clients.
+- A separate 50/100-client capacity stress run using a larger bounded worker pool.
 - A JavaFX console that performs real operations without blocking the JavaFX Application Thread.
 - A three-process replication demonstration with leader A and replicas B and C.
 
@@ -31,7 +32,7 @@ This repository is the complete HCS425 submission project. It contains the sourc
 | `server` | `ServerSocket`, bounded `ExecutorService`, `ConcurrentHashMap`, metrics and logs |
 | `client` | Timeout-aware synchronous client and JavaFX-safe asynchronous facade |
 | `replication` | Leader-coordinated asynchronous update propagation to two replicas |
-| `benchmark` | Coordinated real-TCP 1/2/5/10/20-client benchmark |
+| `benchmark` | Coordinated real-TCP required benchmark plus configurable stress counts |
 | `desktop` | JavaFX dashboard with AtlantaFX 2.0.1 theme and live operational controls |
 
 The root project is a Maven parent project. Build from the repository root so Maven builds modules in dependency order: `shared` → `server` → `client` → `replication` → `benchmark` → `desktop`.
@@ -66,6 +67,14 @@ Run the complete build and tests:
 mvn clean verify
 ```
 
+### NetBeans evidence
+
+At this point the lecturer should see the root Maven project opened in NetBeans and a successful reactor build. These are the first submission screenshots; no VPS remote desktop is needed.
+
+| Project opened | Maven build successful |
+|---|---|
+| [![Project opened in NetBeans](results/screenshots/01-project-open.png)](results/screenshots/01-project-open.png) | [![Maven build successful](results/screenshots/02-build-success.png)](results/screenshots/02-build-success.png) |
+
 Run the desktop with its embedded local server:
 
 ```bash
@@ -79,6 +88,10 @@ Xvfb :99 -screen 0 1280x800x24 -ac +extension GLX &
 export DISPLAY=:99
 ./scripts/start-desktop.sh
 ```
+
+The application opens in light mode by default. The dashboard below shows the live TCP status and monitoring layout after startup:
+
+[![Light dashboard](results/screenshots/dashboard-light-latest.png)](results/screenshots/dashboard-light-latest.png)
 
 The desktop starts an embedded server on `127.0.0.1:5050` by default. To run the server independently, use two terminal tabs:
 
@@ -100,15 +113,49 @@ Stop a running server, desktop, or cluster with `Ctrl+C`. Do not start the stand
 
 The repository also contains a [VPS-only remote desktop note](docs/testing/remote-desktop-netbeans.md) used by the author while developing and capturing evidence. It is not part of the required evaluation workflow.
 
-## Simple demonstration flow
+## Demonstration walkthrough
 
-1. Run `./scripts/start-desktop.sh`.
-2. Open **Dashboard** and show live status, clients, requests, latency, throughput, activity, and health.
-3. Open **Key-Value Store** and execute PUT, GET, LIST, and DELETE.
-4. Open **Client Manager** and launch simulated clients.
-5. Open **Performance Testing**, choose 1, 2, 5, 10, or 20 clients, and run a workload.
-6. Open **Server Logs** to search or export events.
-7. Open **Replication** when the three-process cluster is running.
+Follow these steps during marking. The screenshots appear beside the operation they demonstrate.
+
+### 1. Demonstrate the key-value protocol
+
+Open **Key-Value Store** and execute `PUT`, `GET`, `LIST`, and `DELETE`. Use a key such as `student01` and a value containing spaces such as `Alice in Harare`. The UI should display the server response and measured response time; LIST should show the actual stored row.
+
+| PUT | GET | LIST | DELETE |
+|---|---|---|---|
+| [![PUT](results/screenshots/put-operation-light.png)](results/screenshots/put-operation-light.png) | [![GET](results/screenshots/get-operation-light.png)](results/screenshots/get-operation-light.png) | [![LIST](results/screenshots/list-operation-light.png)](results/screenshots/list-operation-light.png) | [![DELETE](results/screenshots/delete-operation-light.png)](results/screenshots/delete-operation-light.png) |
+
+The same interaction is also available in the original dark theme: [PUT](results/screenshots/put-operation.png), [GET](results/screenshots/get-operation.png), [LIST](results/screenshots/list-operation.png), and [DELETE](results/screenshots/delete-operation.png).
+
+### 2. Demonstrate simultaneous clients
+
+Open **Client Manager**. The control supports 1–100 simulated clients. For the assignment demonstration, show 10 or 20 clients; the capture below shows 50 real TCP connections held open while the server table refreshed.
+
+[![Fifty active TCP clients](results/screenshots/client-manager-50-light.png)](results/screenshots/client-manager-50-light.png)
+
+### 3. Demonstrate performance testing
+
+Open **Performance Testing**. The required comparison is 1, 2, 5, 10, and 20 clients with the same total workload. The additional 50/100 controls are for capacity testing and are reported separately below. The page opens with the 100-client option available. For a clean 50/100-client UI run, start the desktop with `HCS425_WORKERS=128 ./scripts/start-desktop.sh`; the normal lecturer demonstration can use the default 32-worker pool:
+
+[![Performance testing controls with 100 clients](results/screenshots/performance-100-light.png)](results/screenshots/performance-100-light.png)
+
+### 4. Demonstrate server logs and fault handling
+
+Open **Server Logs** after client activity. It should show startup, accepted connections, requests and disconnect cleanup. The automated fault harness then aborts one client, confirms nine unaffected clients, reconnects a replacement, and verifies the server remains running.
+
+[![Server logs](results/screenshots/server-logs-light.png)](results/screenshots/server-logs-light.png)
+
+Run the fault test from the repository root:
+
+```bash
+./scripts/run-fault-test.sh
+```
+
+Expected evidence is recorded in [`results/csv/fault-tolerance.txt`](results/csv/fault-tolerance.txt).
+
+### 5. Demonstrate replication
+
+Open **Replication** after starting the three-process cluster below. The page reports node roles and health; the implementation intentionally documents asynchronous eventual consistency and controlled failover rather than claiming consensus.
 
 The server listens on `127.0.0.1:5050` by default. Override with `HCS425_HOST`, `HCS425_PORT`, and `HCS425_WORKERS` for `start-server.sh`, or with `-Dhcs425.host=...`, `-Dhcs425.port=...`, and `-Dhcs425.workers=...` when launching Java directly.
 
@@ -130,6 +177,8 @@ printf 'GET demo\n' | nc -w 2 127.0.0.1 5052
 
 Both replicas should return `OK VALUE replicated-value`. Cluster logs are written to `logs/node-A.log`, `logs/node-B.log`, and `logs/node-C.log`.
 
+[![Replication monitoring page](results/screenshots/replication.png)](results/screenshots/replication.png)
+
 ## Testing and performance workflow
 
 Run all automated protocol, store, real TCP, concurrency, replication, benchmark-smoke, and desktop-resource tests:
@@ -150,11 +199,33 @@ Latest measured run on the VPS:
 
 | Clients | Operations | Throughput ops/s | Mean ms | p95 ms | Speedup | Efficiency | Errors |
 |---:|---:|---:|---:|---:|---:|---:|---:|
-| 1 | 2,000 | 3,852.01 | 0.250 | 0.721 | 1.000x | 100.00% | 0 |
-| 2 | 2,000 | 10,290.59 | 0.180 | 0.419 | 2.671x | 133.57% | 0 |
-| 5 | 2,000 | 9,435.52 | 0.452 | 1.004 | 2.450x | 48.99% | 0 |
-| 10 | 2,000 | 15,036.64 | 0.572 | 1.062 | 3.904x | 39.04% | 0 |
-| 20 | 2,000 | 15,465.05 | 0.906 | 3.874 | 4.015x | 20.07% | 0 |
+| 1 | 2,000 | 1,874.39 | 0.511 | 1.845 | 1.000x | 100.00% | 0 |
+| 2 | 2,000 | 6,120.21 | 0.321 | 0.725 | 3.265x | 163.26% | 0 |
+| 5 | 2,000 | 7,119.30 | 0.594 | 2.896 | 3.798x | 75.96% | 0 |
+| 10 | 2,000 | 8,256.64 | 1.136 | 3.864 | 4.405x | 44.05% | 0 |
+| 20 | 2,000 | 6,842.28 | 2.312 | 6.688 | 3.650x | 18.25% | 0 |
+
+Measured result charts: [throughput](results/charts/throughput.svg), [speedup](results/charts/speedup.svg), and [efficiency](results/charts/efficiency.svg).
+
+![Primary measured throughput](results/charts/throughput.svg)
+
+### Additional 50 versus 100 client capacity test
+
+This separate run keeps a fixed 10,000-operation workload and uses 128 bounded workers so the comparison measures client concurrency rather than the normal 32-worker overload limit. It is additional evidence, not a replacement for the required 1/2/5/10/20 run.
+
+```bash
+./scripts/run-stress-benchmarks.sh
+```
+
+| Clients | Operations | Elapsed (s) | Mean (ms) | p95 (ms) | Throughput | Speedup | Efficiency | Errors |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 10,000 | 2.422105 | 0.236 | 0.737 | 4,128.64 | 1.000x | 100.00% | 0 |
+| 50 | 10,000 | 1.216913 | 5.606 | 30.370 | 8,217.51 | 1.990x | 3.98% | 0 |
+| 100 | 10,000 | 1.195404 | 10.864 | 52.917 | 8,365.37 | 2.026x | 2.03% | 0 |
+
+The extra run is stored in [`results/csv/stress-performance-results.csv`](results/csv/stress-performance-results.csv), with charts under [`results/charts/stress/`](results/charts/stress/). It shows that throughput improves only slightly from 50 to 100 clients while p95 latency rises, which is the expected saturation behavior on this four-core VPS.
+
+![50/100-client stress throughput](results/charts/stress/throughput.svg)
 
 Run the unexpected-client-failure test:
 
@@ -274,53 +345,15 @@ zip -r -q -FS submission/hcs425-distributed-system.zip . \
 - Automatic leader election, quorum commit, consensus, network-partition resolution, and automatic missed-update reconciliation are not implemented or claimed.
 - Apache NetBeans 31 GUI opening was verified on the VPS display `:99` with JDK 21; the Maven reactor build, dependency resolution, tests, JavaFX launch, resources, and NetBeans Maven metadata were also verified.
 
-## Screenshots
-
-### Submission environment evidence
-
-These two captures show the project opened in Apache NetBeans and the Maven verification completing successfully:
-
-| Project opened | Build verification |
-|---|---|
-| [![Project opened](results/screenshots/01-project-open.png)](https://imglink.cc/cdn/8enQr1cRVX.png) | [![Build verification](results/screenshots/02-build-success.png)](https://imglink.cc/cdn/5v4aDrlbGI.png) |
-
-The following screenshots were captured from the running JavaFX application under Xvfb:
-
-| Dashboard | Key-value operation | Performance results | Replication |
-|---|---|---|---|
-| [![Dashboard](results/screenshots/dashboard-live.png)](results/screenshots/dashboard-live.png) | [![PUT operation](results/screenshots/put-operation.png)](results/screenshots/put-operation.png) | [![Performance results](results/screenshots/performance-results.png)](results/screenshots/performance-results.png) | [![Replication](results/screenshots/replication.png)](results/screenshots/replication.png) |
-
-### Assignment evidence gallery
-
-The gallery below makes the required implementation visible in the submission. Each image is a capture from the running JavaFX console; measured benchmark and fault-tolerance details are also linked in the evidence table.
-
-#### Key-value operations
-
-| PUT | GET | DELETE | LIST |
-|---|---|---|---|
-| [![PUT operation](results/screenshots/put-operation.png)](results/screenshots/put-operation.png) | [![GET operation](results/screenshots/get-operation.png)](results/screenshots/get-operation.png) | [![DELETE operation](results/screenshots/delete-operation.png)](results/screenshots/delete-operation.png) | [![LIST operation](results/screenshots/list-operation.png)](results/screenshots/list-operation.png) |
-
-#### Monitoring and connected clients
-
-| Dashboard | Key-value page | Connected clients | Server logs |
-|---|---|---|---|
-| [![Dashboard](results/screenshots/dashboard-live.png)](results/screenshots/dashboard-live.png) | [![Key-value page](results/screenshots/key-value.png)](results/screenshots/key-value.png) | [![Client manager](results/screenshots/client-manager.png)](results/screenshots/client-manager.png) | [![Server logs](results/screenshots/server-logs.png)](results/screenshots/server-logs.png) |
-
-#### Concurrency, performance and replication
-
-| Performance controls | Measured results | Replication monitor | Light theme |
-|---|---|---|---|
-| [![Performance page](results/screenshots/performance-page.png)](results/screenshots/performance-page.png) | [![Performance results](results/screenshots/performance-results.png)](results/screenshots/performance-results.png) | [![Replication](results/screenshots/replication.png)](results/screenshots/replication.png) | [![Light mode](results/screenshots/light-mode.png)](results/screenshots/light-mode.png) |
-
-### Requirement-to-evidence map
+## Requirement-to-evidence map
 
 | Assignment requirement | README evidence |
 |---|---|
-| TCP client-server communication and server status | [Dashboard](results/screenshots/dashboard-live.png), [key-value page](results/screenshots/key-value.png), [protocol specification](docs/protocol/protocol.md) |
-| PUT, GET, DELETE and LIST operations | [PUT](results/screenshots/put-operation.png), [GET](results/screenshots/get-operation.png), [DELETE](results/screenshots/delete-operation.png), [LIST](results/screenshots/list-operation.png) |
-| At least 10 simultaneous clients and 20-client test | [Client manager](results/screenshots/client-manager.png), [performance controls](results/screenshots/performance-page.png), [measured CSV](results/csv/performance-results.csv) |
+| TCP client-server communication and server status | [Light dashboard](results/screenshots/dashboard-light-latest.png), [key-value page](results/screenshots/key-value.png), [protocol specification](docs/protocol/protocol.md) |
+| PUT, GET, DELETE and LIST operations | [PUT](results/screenshots/put-operation-light.png), [GET](results/screenshots/get-operation-light.png), [DELETE](results/screenshots/delete-operation-light.png), [LIST](results/screenshots/list-operation-light.png) |
+| At least 10 simultaneous clients and 20-client test | [50-client manager capture](results/screenshots/client-manager-50-light.png), [performance controls](results/screenshots/performance-100-light.png), [measured CSV](results/csv/performance-results.csv) |
 | Threading, synchronization and race-condition protection | [Core architecture diagram](docs/architecture/architecture.svg), [requirements coverage](docs/testing/requirements-coverage.md), [test evidence](docs/testing/test-evidence.md) |
-| Response time, throughput, speedup and efficiency | [Performance results](results/screenshots/performance-results.png), [performance CSV](results/csv/performance-results.csv), [technical report](docs/report/technical-report.md) |
-| Malformed requests and failed-client cleanup | [Server logs](results/screenshots/server-logs.png), [fault-tolerance evidence](results/csv/fault-tolerance.txt) |
+| Response time, throughput, speedup and efficiency | [Performance controls](results/screenshots/performance-100-light.png), [primary performance CSV](results/csv/performance-results.csv), [50/100 stress CSV](results/csv/stress-performance-results.csv), [technical report](docs/report/technical-report.md) |
+| Malformed requests and failed-client cleanup | [Light server logs](results/screenshots/server-logs-light.png), [fault-tolerance evidence](results/csv/fault-tolerance.txt) |
 | Replicated servers and synchronization behavior | [Replication monitor](results/screenshots/replication.png), [replication diagram](docs/architecture/replication.svg), [replication evidence](results/csv/replication-evidence.txt) |
 | Architecture and implementation explanation | [Architecture diagrams](docs/architecture/), [technical report](docs/report/technical-report.md) |
