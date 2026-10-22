@@ -49,9 +49,9 @@ javac -version
 mvn -version
 ```
 
-## Open and run from Apache NetBeans
+## Build and run from Apache NetBeans
 
-This is the normal lecturer/reviewer workflow. The lecturer should use their own installed Apache NetBeans; access to the author's VPS, remote desktop, browser gateway, or public desktop address is not required.
+The project is a standard Maven reactor and opens in any compatible Apache NetBeans installation.
 
 1. Start Apache NetBeans.
 2. Select **File → Open Project**.
@@ -69,7 +69,7 @@ mvn clean verify
 
 ### NetBeans evidence
 
-At this point the lecturer should see the root Maven project opened in NetBeans and a successful reactor build. These are the first submission screenshots; no VPS remote desktop is needed.
+The root Maven project should appear in NetBeans and the reactor build should complete successfully. These are the first submission screenshots; the remote development environment is not required.
 
 | Project opened | Maven build successful |
 |---|---|
@@ -111,15 +111,13 @@ mvn -pl desktop javafx:run -Dhcs425.embedded=true
 
 Stop a running server, desktop, or cluster with `Ctrl+C`. Do not start the standalone server on port 5050 at the same time as the desktop's embedded server.
 
-The repository also contains a [VPS-only remote desktop note](docs/testing/remote-desktop-netbeans.md) used by the author while developing and capturing evidence. It is not part of the required evaluation workflow.
+## Demonstration evidence
 
-## Demonstration walkthrough
-
-Follow these steps during marking. The screenshots appear beside the operation they demonstrate.
+The following workflow demonstrates the implemented requirements. The screenshots appear beside the operation they document.
 
 ### 1. Demonstrate the key-value protocol
 
-Open **Key-Value Store** and execute `PUT`, `GET`, `LIST`, and `DELETE`. Use a key such as `student01` and a value containing spaces such as `Alice in Harare`. The UI should display the server response and measured response time; LIST should show the actual stored row.
+In **Key-Value Store**, execute `PUT`, `GET`, `LIST`, and `DELETE`. A key such as `student01` and a value containing spaces such as `Alice in Harare` demonstrate the protocol's value parsing. The UI displays the server response and measured response time; LIST displays the actual stored row.
 
 | PUT | GET | LIST | DELETE |
 |---|---|---|---|
@@ -129,19 +127,19 @@ The same interaction is also available in the original dark theme: [PUT](results
 
 ### 2. Demonstrate simultaneous clients
 
-Open **Client Manager**. The control supports 1–100 simulated clients. For the assignment demonstration, show 10 or 20 clients; the capture below shows 50 real TCP connections held open while the server table refreshed.
+The **Client Manager** supports 1–100 simulated clients. The assignment threshold is demonstrated with 10 or 20 clients; the capture below shows 50 real TCP connections held open while the server table refreshed.
 
 [![Fifty active TCP clients](results/screenshots/client-manager-50-light.png)](results/screenshots/client-manager-50-light.png)
 
 ### 3. Demonstrate performance testing
 
-Open **Performance Testing**. The required comparison is 1, 2, 5, 10, and 20 clients with the same total workload. The additional 50/100 controls are for capacity testing and are reported separately below. The page opens with the 100-client option available. For a clean 50/100-client UI run, start the desktop with `HCS425_WORKERS=128 ./scripts/start-desktop.sh`; the normal lecturer demonstration can use the default 32-worker pool:
+The **Performance Testing** page provides the required comparison of 1, 2, 5, 10, and 20 clients with the same total workload. The additional 50/100 controls are capacity tests and are reported separately below. For a 50/100-client UI run, use `HCS425_WORKERS=128 ./scripts/start-desktop.sh`; the standard demonstration uses the default 32-worker pool:
 
 [![Performance testing controls with 100 clients](results/screenshots/performance-100-light.png)](results/screenshots/performance-100-light.png)
 
 ### 4. Demonstrate server logs and fault handling
 
-Open **Server Logs** after client activity. It should show startup, accepted connections, requests and disconnect cleanup. The automated fault harness then aborts one client, confirms nine unaffected clients, reconnects a replacement, and verifies the server remains running.
+The **Server Logs** page shows startup, accepted connections, requests, and disconnect cleanup. The automated fault harness aborts one client, confirms nine unaffected clients, reconnects a replacement, and verifies that the server remains running.
 
 [![Server logs](results/screenshots/server-logs-light.png)](results/screenshots/server-logs-light.png)
 
@@ -155,7 +153,7 @@ Expected evidence is recorded in [`results/csv/fault-tolerance.txt`](results/csv
 
 ### 5. Demonstrate replication
 
-Open **Replication** after starting the three-process cluster below. The page reports node roles and health; the implementation intentionally documents asynchronous eventual consistency and controlled failover rather than claiming consensus.
+The **Replication** page reports node roles and health after the three-process cluster is started. The implementation documents asynchronous eventual consistency and controlled failover rather than claiming consensus.
 
 The server listens on `127.0.0.1:5050` by default. Override with `HCS425_HOST`, `HCS425_PORT`, and `HCS425_WORKERS` for `start-server.sh`, or with `-Dhcs425.host=...`, `-Dhcs425.port=...`, and `-Dhcs425.workers=...` when launching Java directly.
 
@@ -195,7 +193,7 @@ Run the full measured fixed-total-workload benchmark:
 
 This executes 2,000 total operations at 1, 2, 5, 10, and 20 clients using real TCP connections. It writes `results/csv/performance-results.csv` and the SVG charts in `results/charts/`. The CSV contains mean latency, median latency, p95 latency, throughput, speedup, efficiency, and errors.
 
-Latest measured run on the VPS:
+Recorded measured run on the four-core test host:
 
 | Clients | Operations | Throughput ops/s | Mean ms | p95 ms | Speedup | Efficiency | Errors |
 |---:|---:|---:|---:|---:|---:|---:|---:|
@@ -223,7 +221,7 @@ This separate run keeps a fixed 10,000-operation workload and uses 128 bounded w
 | 50 | 10,000 | 1.216913 | 5.606 | 30.370 | 8,217.51 | 1.990x | 3.98% | 0 |
 | 100 | 10,000 | 1.195404 | 10.864 | 52.917 | 8,365.37 | 2.026x | 2.03% | 0 |
 
-The extra run is stored in [`results/csv/stress-performance-results.csv`](results/csv/stress-performance-results.csv), with charts under [`results/charts/stress/`](results/charts/stress/). It shows that throughput improves only slightly from 50 to 100 clients while p95 latency rises, which is the expected saturation behavior on this four-core VPS.
+The extra run is stored in [`results/csv/stress-performance-results.csv`](results/csv/stress-performance-results.csv), with charts under [`results/charts/stress/`](results/charts/stress/). It shows that throughput improves only slightly from 50 to 100 clients while p95 latency rises, consistent with saturation on the four-core test host.
 
 ![50/100-client stress throughput](results/charts/stress/throughput.svg)
 
@@ -326,7 +324,7 @@ Important submission files:
 - [Core architecture diagram](docs/architecture/architecture.svg)
 - [Replication architecture diagram](docs/architecture/replication.svg)
 - [Test evidence](docs/testing/test-evidence.md)
-- [VPS environment record](docs/testing/vps-environment.md)
+- [Test environment record](docs/testing/vps-environment.md)
 - [Open-source notices](LICENSES.md)
 - [Submission ZIP](submission/hcs425-distributed-system.zip)
 
@@ -343,7 +341,7 @@ zip -r -q -FS submission/hcs425-distributed-system.zip . \
 - Replication is single-writer asynchronous eventual consistency.
 - Replica unavailability is logged while the leader continues local service.
 - Automatic leader election, quorum commit, consensus, network-partition resolution, and automatic missed-update reconciliation are not implemented or claimed.
-- Apache NetBeans 31 GUI opening was verified on the VPS display `:99` with JDK 21; the Maven reactor build, dependency resolution, tests, JavaFX launch, resources, and NetBeans Maven metadata were also verified.
+- Apache NetBeans 31 project opening was verified with JDK 21; the Maven reactor build, dependency resolution, tests, JavaFX launch, resources, and NetBeans Maven metadata were also verified.
 
 ## Requirement-to-evidence map
 

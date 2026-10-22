@@ -34,4 +34,4 @@ mvn clean verify
 ./scripts/start-cluster.sh
 ```
 
-The JavaFX console was launched and screenshots were captured under Xvfb. Apache NetBeans 31 was used on the author's VPS display to verify project opening and the Maven workflow. The lecturer does not need access to that remote desktop and can open the root `pom.xml` in their own NetBeans installation.
+The JavaFX console was launched and screenshots were captured under Xvfb. Apache NetBeans 31 project opening and the Maven workflow were verified with JDK 21. The root `pom.xml` is the portable entry point for any compatible NetBeans installation.

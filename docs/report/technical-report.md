@@ -51,7 +51,7 @@ The greater-than-100% two-client efficiency is a measured result of the very sma
 | 50 | 10,000 | 1.216913 | 5.606318 | 1.012405 | 30.369606 | 8,217.51 | 1.990x | 3.98% | 0 |
 | 100 | 10,000 | 1.195404 | 10.864482 | 0.528275 | 52.917423 | 8,365.37 | 2.026x | 2.03% | 0 |
 
-The 50-to-100 comparison shows only a small throughput increase and a substantial p95-latency increase, indicating saturation on the four-logical-CPU VPS rather than linear scaling.
+The 50-to-100 comparison shows only a small throughput increase and a substantial p95-latency increase, indicating saturation on the four-logical-CPU test host rather than linear scaling.
 
 ## 7. Replication design
 
@@ -63,4 +63,4 @@ The store is in memory and not durable. Replication does not implement consensus
 
 ## 9. Conclusion and evidence
 
-`mvn clean verify`, the benchmark script, the fault harness, the three-process cluster script, diagrams, screenshots, and CSV evidence are the reproducible submission artifacts. The runtime evidence directory contains 1280×800 PNG captures from the running JavaFX process, including live dashboard metrics and performance-table output. The requirement mapping is in `docs/testing/requirements-coverage.md`. Apache NetBeans 31 was also used on the author's VPS display to verify project opening and the Maven workflow; the lecturer can independently open the root `pom.xml` in their own NetBeans installation.
+`mvn clean verify`, the benchmark script, the fault harness, the three-process cluster script, diagrams, screenshots, and CSV evidence are the reproducible submission artifacts. The runtime evidence directory contains 1280×800 PNG captures from the running JavaFX process, including live dashboard metrics and performance-table output. The requirement mapping is in `docs/testing/requirements-coverage.md`. Apache NetBeans 31 project opening and the Maven workflow were also verified with JDK 21.
