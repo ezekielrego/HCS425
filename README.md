@@ -12,6 +12,8 @@ This repository is the complete HCS425 submission project. It contains the sourc
 | Registration number | M230913 |
 | Course | HCS425 |
 
+**Submission identity:** HCS425 final submission — Ezekiel Rego (M230913).
+
 ## What the system demonstrates
 
 - Java TCP communication using `ServerSocket` and persistent UTF-8 `Socket` connections.
@@ -327,6 +329,8 @@ Important submission files:
 - [Test environment record](docs/testing/vps-environment.md)
 - [Open-source notices](LICENSES.md)
 - [Submission ZIP](submission/hcs425-distributed-system.zip)
+
+All screenshots, measured results, diagrams, and documentation in this repository form the HCS425 submission of Ezekiel Rego (M230913).
 
 The ZIP excludes Maven `target/` directories, temporary logs, caches, and unrelated VPS files. Recreate it after changing evidence with:
 

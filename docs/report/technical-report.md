@@ -3,6 +3,8 @@
 **Student:** Ezekiel Rego  
 **Registration number:** M230913
 
+> HCS425 final submission — Ezekiel Rego (M230913)
+
 ## 1. Introduction and objectives
 
 This submission implements a working TCP client-server key-value system and an operational JavaFX monitoring console. It demonstrates persistent connections, bounded multi-threading, safe shared state, failure isolation, measured concurrency, and a deliberately scoped replicated-server extension.
